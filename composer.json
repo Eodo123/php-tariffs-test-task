@@ -1,0 +1,10 @@
+  {
+    "name": "your-name/php-tariffs-test-task",
+    "description": "Test task - tariff management system",
+    "require": {},
+    "autoload": {
+      "psr-4": {
+        "App\\": "src/"
+      }
+    }
+  }
