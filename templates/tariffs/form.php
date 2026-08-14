@@ -12,7 +12,12 @@
     </div>
 <?php endif; ?>
 
-<form method="POST" action="/tariffs">
+<form
+        method="POST"
+        action="<?= $tariff !== null
+                ? '/tariffs/' . $tariff->id
+                : '/tariffs' ?>"
+>
 
     <div>
         <label for="name">Название:</label>

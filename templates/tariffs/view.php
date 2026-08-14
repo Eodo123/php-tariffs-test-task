@@ -23,4 +23,12 @@
     <dd><?= htmlspecialchars($tariff->expiresAt ?? '') ?></dd>
 </dl>
 
-<a href="/">← Назад к списку</a>
+<a href="/tariffs/<?= $tariff->id ?>/edit">
+    Редактировать
+</a>
+
+<br>
+
+<a href="/">
+    ← Назад к списку
+</a>

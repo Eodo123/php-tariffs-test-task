@@ -76,6 +76,28 @@ class TariffRepository
         return (int) $this->connection->lastInsertId();
     }
 
+    public function update(Tariff $tariff): void
+    {
+        $statement = $this->connection->prepare(
+            'UPDATE tariffs
+         SET name = :name,
+             description = :description,
+             speed = :speed,
+             price = :price,
+             expires_at = :expires_at
+         WHERE id = :id'
+        );
+
+        $statement->execute([
+            'id' => $tariff->id,
+            'name' => $tariff->name,
+            'description' => $tariff->description,
+            'speed' => $tariff->speed,
+            'price' => $tariff->price,
+            'expires_at' => $tariff->expiresAt,
+        ]);
+    }
+
     private function mapRowToTariff(array $row): Tariff
     {
         return new Tariff(

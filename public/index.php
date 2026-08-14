@@ -41,6 +41,16 @@ $router->post(
 );
 
 $router->get(
+    '/tariffs/{id}/edit',
+    [$controller, 'edit']
+);
+
+$router->post(
+    '/tariffs/{id}',
+    [$controller, 'update']
+);
+
+$router->get(
     '/tariffs/{id}',
     [$controller, 'view']
 );

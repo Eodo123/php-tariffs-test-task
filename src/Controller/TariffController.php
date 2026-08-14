@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Repository\TariffRepository;
 use PDOException;
+use App\Model\Tariff;
 use App\View\View;
 
 class TariffController
@@ -67,6 +68,18 @@ class TariffController
         $price = (float) ($_POST['price'] ?? 0);
         $expiresAt = trim($_POST['expires_at'] ?? '');
 
+        $tariff = new Tariff(
+            id: null,
+            name: $name,
+            description: $description !== '' ? $description : null,
+            speed: $speed,
+            price: $price,
+            createdAt: '',
+            expiresAt: $expiresAt !== ''
+                ? date('Y-m-d H:i:s', strtotime($expiresAt))
+                : null,
+        );
+
         $errors = [];
 
         if ($name === '') {
@@ -86,7 +99,7 @@ class TariffController
                 'tariffs/form',
                 [
                     'title' => 'Создание тарифа',
-                    'tariff' => null,
+                    'tariff' => $tariff,
                     'errors' => $errors,
                 ]
             );
@@ -94,18 +107,135 @@ class TariffController
             return;
         }
 
-        $this->repository->create(
-            name: $name,
-            description: $description !== '' ? $description : null,
-            speed: $speed,
-            price: $price,
-            createdAt: date('Y-m-d H:i:s'),
-            expiresAt: $expiresAt !== ''
-                ? date('Y-m-d H:i:s', strtotime($expiresAt))
-                : null,
-        );
+        try {
+            $this->repository->create(
+                name: $name,
+                description: $description !== '' ? $description : null,
+                speed: $speed,
+                price: $price,
+                createdAt: date('Y-m-d H:i:s'),
+                expiresAt: $expiresAt !== ''
+                    ? date('Y-m-d H:i:s', strtotime($expiresAt))
+                    : null,
+            );
+        } catch (PDOException $exception) {
+            if ($exception->getCode() === '23000') {
+                $errors[] = 'Тариф с таким названием уже существует.';
+            } else {
+                throw $exception;
+            }
+
+            $this->view->render(
+                'tariffs/form',
+                [
+                    'title' => 'Создание тарифа',
+                    'tariff' => $tariff,
+                    'errors' => $errors,
+                ]
+            );
+
+            return;
+        }
 
         header('Location: /');
+        exit;
+    }
+
+    public function edit(int $id): void
+    {
+        $tariff = $this->repository->findById($id);
+
+        if ($tariff === null) {
+            http_response_code(404);
+            echo 'Тариф не найден';
+
+            return;
+        }
+
+        $this->view->render(
+            'tariffs/form',
+            [
+                'title' => 'Редактирование тарифа',
+                'tariff' => $tariff,
+                'errors' => [],
+            ]
+        );
+    }
+
+    public function update(int $id): void
+    {
+        $tariff = $this->repository->findById($id);
+
+        if ($tariff === null) {
+            http_response_code(404);
+            echo 'Тариф не найден';
+
+            return;
+        }
+
+        $name = trim($_POST['name'] ?? '');
+        $description = trim($_POST['description'] ?? '');
+        $speed = (int) ($_POST['speed'] ?? 0);
+        $price = (float) ($_POST['price'] ?? 0);
+        $expiresAt = trim($_POST['expires_at'] ?? '');
+
+        $errors = [];
+
+        if ($name === '') {
+            $errors[] = 'Название обязательно.';
+        }
+
+        if ($speed <= 0) {
+            $errors[] = 'Скорость должна быть больше 0.';
+        }
+
+        if ($price < 0) {
+            $errors[] = 'Стоимость не может быть отрицательной.';
+        }
+
+        $tariff->name = $name;
+        $tariff->description = $description !== '' ? $description : null;
+        $tariff->speed = $speed;
+        $tariff->price = $price;
+        $tariff->expiresAt = $expiresAt !== ''
+            ? date('Y-m-d H:i:s', strtotime($expiresAt))
+            : null;
+
+        if (!empty($errors)) {
+            $this->view->render(
+                'tariffs/form',
+                [
+                    'title' => 'Редактирование тарифа',
+                    'tariff' => $tariff,
+                    'errors' => $errors,
+                ]
+            );
+
+            return;
+        }
+
+        try {
+            $this->repository->update($tariff);
+        } catch (PDOException $exception) {
+            if ($exception->getCode() === '23000') {
+                $errors[] = 'Тариф с таким названием уже существует.';
+            } else {
+                throw $exception;
+            }
+
+            $this->view->render(
+                'tariffs/form',
+                [
+                    'title' => 'Редактирование тарифа',
+                    'tariff' => $tariff,
+                    'errors' => $errors,
+                ]
+            );
+
+            return;
+        }
+
+        header('Location: /tariffs/' . $id);
         exit;
     }
 }
