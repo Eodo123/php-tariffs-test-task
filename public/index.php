@@ -31,6 +31,11 @@ $router->get(
 );
 
 $router->get(
+    '/tariffs/export/csv',
+    [$controller, 'exportCsv']
+);
+
+$router->get(
     '/tariffs/create',
     [$controller, 'create']
 );

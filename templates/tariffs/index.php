@@ -7,6 +7,13 @@
 <br>
 <br>
 
+<a href="/tariffs/export/csv">
+    Экспортировать в CSV
+</a>
+
+<br>
+<br>
+
 <table border="1">
     <thead>
     <tr>

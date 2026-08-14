@@ -276,4 +276,45 @@ class TariffController
             'speed' => $speed,
         ]);
     }
+
+    public function exportCsv(): void
+    {
+        $tariffs = $this->repository->findAll();
+
+        header('Content-Type: text/csv; charset=UTF-8');
+
+        $filename = 'tariffs_' . date('Y-m-d_H-i-s') . '.csv';
+        header(
+            'Content-Disposition: attachment; filename="' . $filename . '"'
+        );
+
+        $output = fopen('php://output', 'w');
+
+        fwrite($output, "\xEF\xBB\xBF");
+
+        fputcsv($output, [
+            'id',
+            'name',
+            'description',
+            'speed',
+            'price',
+            'created_at',
+            'expires_at',
+        ], ';');
+
+        foreach ($tariffs as $tariff) {
+            fputcsv($output, [
+                $tariff->id,
+                $tariff->name,
+                $tariff->description,
+                $tariff->speed,
+                $tariff->price,
+                $tariff->createdAt,
+                $tariff->expiresAt,
+            ], ';');
+        }
+
+        fclose($output);
+        exit;
+    }
 }
