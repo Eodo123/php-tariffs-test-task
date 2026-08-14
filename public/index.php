@@ -46,6 +46,11 @@ $router->get(
 );
 
 $router->post(
+    '/tariffs/{id}/speed',
+    [$controller, 'updateSpeed']
+);
+
+$router->post(
     '/tariffs/{id}',
     [$controller, 'update']
 );

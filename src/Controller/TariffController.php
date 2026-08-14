@@ -238,4 +238,42 @@ class TariffController
         header('Location: /tariffs/' . $id);
         exit;
     }
+
+    public function updateSpeed(int $id): void
+    {
+        $speed = (int) ($_POST['speed'] ?? 0);
+
+        if ($speed <= 0) {
+            http_response_code(400);
+
+            echo json_encode([
+                'success' => false,
+                'error' => 'Скорость должна быть больше 0.',
+            ]);
+
+            return;
+        }
+
+        $tariff = $this->repository->findById($id);
+
+        if ($tariff === null) {
+            http_response_code(404);
+
+            echo json_encode([
+                'success' => false,
+                'error' => 'Тариф не найден.',
+            ]);
+
+            return;
+        }
+
+        $this->repository->updateSpeed($id, $speed);
+
+        header('Content-Type: application/json');
+
+        echo json_encode([
+            'success' => true,
+            'speed' => $speed,
+        ]);
+    }
 }

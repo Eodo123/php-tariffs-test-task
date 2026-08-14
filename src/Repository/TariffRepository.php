@@ -110,4 +110,18 @@ class TariffRepository
             expiresAt: $row['expires_at'],
         );
     }
+
+    public function updateSpeed(int $id, int $speed): void
+    {
+        $statement = $this->connection->prepare(
+            'UPDATE tariffs
+         SET speed = :speed
+         WHERE id = :id'
+        );
+
+        $statement->execute([
+            'id' => $id,
+            'speed' => $speed,
+        ]);
+    }
 }
