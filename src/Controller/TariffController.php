@@ -317,4 +317,184 @@ class TariffController
         fclose($output);
         exit;
     }
+
+    public function importCsv(): void
+    {
+        if (
+            !isset($_FILES['file']) ||
+            $_FILES['file']['error'] !== UPLOAD_ERR_OK
+        ) {
+            $_SESSION['error'] = 'Не удалось загрузить файл.';
+            header('Location: /');
+            exit;
+        }
+
+        $file = $_FILES['file']['tmp_name'];
+
+        $handle = fopen($file, 'r');
+
+        if ($handle === false) {
+            $_SESSION['error'] = 'Не удалось открыть CSV-файл.';
+            header('Location: /');
+            exit;
+        }
+
+        $firstLine = fgets($handle);
+
+        if ($firstLine === false) {
+            fclose($handle);
+
+            $_SESSION['error'] = 'CSV-файл пуст.';
+            header('Location: /');
+            exit;
+        }
+
+        $firstLine = preg_replace('/^\xEF\xBB\xBF/', '', $firstLine);
+
+        $delimiter = str_contains($firstLine, ';') ? ';' : ',';
+
+        rewind($handle);
+
+        $bom = fread($handle, 3);
+
+        if ($bom !== "\xEF\xBB\xBF") {
+            rewind($handle);
+        }
+
+        $header = fgetcsv($handle, 0, $delimiter);
+
+        $expectedHeader = [
+            'id',
+            'name',
+            'description',
+            'speed',
+            'price',
+            'created_at',
+            'expires_at',
+        ];
+
+        if ($header !== $expectedHeader) {
+            fclose($handle);
+
+            $_SESSION['error'] = 'Неверный формат CSV-файла.';
+            header('Location: /');
+            exit;
+        }
+
+        if ($header === false) {
+            fclose($handle);
+
+            $_SESSION['error'] = 'CSV-файл пуст.';
+            header('Location: /');
+            exit;
+        }
+
+        $added = 0;
+        $skipped = 0;
+        $errors = [];
+
+        $line = 1;
+
+        while (($row = fgetcsv($handle, 0, $delimiter)) !== false) {
+            $line++;
+
+            if (count($row) < 7) {
+                $errors[] = "Строка {$line}: недостаточно данных.";
+                continue;
+            }
+
+            [
+                $id,
+                $name,
+                $description,
+                $speed,
+                $price,
+                $createdAt,
+                $expiresAt,
+            ] = $row;
+
+            $name = trim($name);
+
+            if ($name === '') {
+                $errors[] = "Строка {$line}: не указано название тарифа.";
+                continue;
+            }
+
+            if ($this->repository->findByName($name) !== null) {
+                $skipped++;
+                $errors[] = "Строка {$line}: тариф «{$name}» уже существует.";
+                continue;
+            }
+
+            if (!is_numeric($speed) || (int) $speed <= 0) {
+                $errors[] = "Строка {$line}: некорректная скорость.";
+                continue;
+            }
+
+            if (!is_numeric($price) || (float) $price < 0) {
+                $errors[] = "Строка {$line}: некорректная стоимость.";
+                continue;
+            }
+
+            if (!$this->isValidDate($createdAt)) {
+                $errors[] = "Строка {$line}: некорректная дата создания.";
+                continue;
+            }
+
+            if (
+                trim($expiresAt) !== '' &&
+                !$this->isValidDate($expiresAt)
+            ) {
+                $errors[] = "Строка {$line}: некорректная дата окончания.";
+                continue;
+            }
+
+            try {
+                $this->repository->create(
+                    name: $name,
+                    description: trim($description) !== ''
+                        ? trim($description)
+                        : null,
+                    speed: (int) $speed,
+                    price: (float) $price,
+                    createdAt: $createdAt,
+                    expiresAt: trim($expiresAt) !== ''
+                        ? trim($expiresAt)
+                        : null,
+                );
+
+                $added++;
+            } catch (PDOException $exception) {
+                if ($exception->getCode() === '23000') {
+                    $skipped++;
+                    $errors[] = "Строка {$line}: тариф «{$name}» уже существует.";
+                } else {
+                    fclose($handle);
+                    throw $exception;
+                }
+            }
+        }
+
+        fclose($handle);
+
+        $_SESSION['import_result'] = [
+            'added' => $added,
+            'skipped' => $skipped,
+            'errors' => $errors,
+        ];
+
+        header('Location: /');
+        exit;
+    }
+
+    private function isValidDate(string $date): bool
+    {
+        $dateTime = \DateTime::createFromFormat(
+            'Y-m-d H:i:s',
+            $date
+        );
+
+        return $dateTime !== false
+            && $dateTime->format('Y-m-d H:i:s') === $date;
+    }
 }

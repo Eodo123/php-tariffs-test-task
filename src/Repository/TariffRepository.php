@@ -49,6 +49,25 @@ class TariffRepository
         return $this->mapRowToTariff($row);
     }
 
+    public function findByName(string $name): ?Tariff
+    {
+        $statement = $this->connection->prepare(
+            'SELECT * FROM tariffs WHERE name = :name'
+        );
+
+        $statement->execute([
+            'name' => $name,
+        ]);
+
+        $row = $statement->fetch();
+
+        if ($row === false) {
+            return null;
+        }
+
+        return $this->mapRowToTariff($row);
+    }
+
     public function create(
         string $name,
         ?string $description,

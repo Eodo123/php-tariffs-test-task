@@ -14,6 +14,52 @@
 <br>
 <br>
 
+<form
+        action="/tariffs/import/csv"
+        method="POST"
+        enctype="multipart/form-data"
+>
+    <input
+            type="file"
+            name="file"
+            accept=".csv"
+            required
+    >
+
+    <button type="submit">
+        Импортировать CSV
+    </button>
+</form>
+
+<?php if (isset($_SESSION['import_result'])): ?>
+    <?php $result = $_SESSION['import_result']; ?>
+
+    <div>
+        <p>
+            Импорт завершён.
+            Добавлено: <?= $result['added'] ?>.
+            Пропущено: <?= $result['skipped'] ?>.
+        </p>
+
+        <?php if ($result['errors']): ?>
+            <ul>
+                <?php foreach ($result['errors'] as $error): ?>
+                    <li><?= htmlspecialchars($error) ?></li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+    </div>
+
+    <?php unset($_SESSION['import_result']); ?>
+<?php endif; ?>
+<?php if (isset($_SESSION['error'])): ?>
+    <div>
+        <?= htmlspecialchars($_SESSION['error']) ?>
+    </div>
+
+    <?php unset($_SESSION['error']); ?>
+<?php endif; ?>
+
 <table border="1">
     <thead>
     <tr>
