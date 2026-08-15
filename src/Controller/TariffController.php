@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\TariffRepository;
+use Dompdf\Dompdf;
 use PDOException;
 use App\Model\Tariff;
 use App\View\View;
@@ -485,6 +486,89 @@ class TariffController
 
         header('Location: /');
         exit;
+    }
+
+    public function exportPdf(): void
+    {
+        $tariffs = $this->repository->findAll();
+
+        $html = '
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <style>
+                body {
+                    font-family: DejaVu Sans, sans-serif;
+                }
+
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+
+                th, td {
+                    border: 1px solid #000;
+                    padding: 5px;
+                    text-align: left;
+                }
+
+                th {
+                    background-color: #eee;
+                }
+            </style>
+        </head>
+        <body>
+            <h1>Тарифы</h1>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Название</th>
+                        <th>Описание</th>
+                        <th>Скорость</th>
+                        <th>Стоимость</th>
+                        <th>Дата создания</th>
+                        <th>Дата окончания</th>
+                    </tr>
+                </thead>
+                <tbody>
+    ';
+
+        foreach ($tariffs as $tariff) {
+            $html .= '
+            <tr>
+                <td>' . htmlspecialchars((string) $tariff->id) . '</td>
+                <td>' . htmlspecialchars($tariff->name) . '</td>
+                <td>' . htmlspecialchars($tariff->description ?? '') . '</td>
+                <td>' . htmlspecialchars((string) $tariff->speed) . ' Мбит/с</td>
+                <td>' . htmlspecialchars((string) $tariff->price) . ' ₽</td>
+                <td>' . htmlspecialchars($tariff->createdAt) . '</td>
+                <td>' . htmlspecialchars($tariff->expiresAt ?? '') . '</td>
+            </tr>
+        ';
+        }
+
+        $html .= '
+                </tbody>
+            </table>
+        </body>
+        </html>
+    ';
+
+        $dompdf = new Dompdf();
+
+        $dompdf->loadHtml($html, 'UTF-8');
+
+        $dompdf->setPaper('A4', 'landscape');
+
+        $dompdf->render();
+
+        $filename = 'tariffs_' . date('Y-m-d_H-i-s') . '.pdf';
+
+        $dompdf->stream($filename, [
+            'Attachment' => true,
+        ]);
     }
 
     private function isValidDate(string $date): bool

@@ -18,7 +18,7 @@ class TariffRepository
     public function findAll(): array
     {
         $statement = $this->connection->query(
-            'SELECT * FROM tariffs ORDER BY id DESC'
+            'SELECT * FROM tariffs ORDER BY id ASC'
         );
 
         $tariffs = [];

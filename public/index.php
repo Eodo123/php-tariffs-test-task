@@ -37,6 +37,11 @@ $router->get(
     [$controller, 'exportCsv']
 );
 
+$router->get(
+    '/tariffs/export/pdf',
+    [$controller, 'exportPdf']
+);
+
 $router->post(
     '/tariffs/import/csv',
     [$controller, 'importCsv']

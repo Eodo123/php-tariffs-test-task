@@ -11,8 +11,13 @@
     Экспортировать в CSV
 </a>
 
+<a href="/tariffs/export/pdf">
+    Экспортировать в PDF
+</a>
+
 <br>
 <br>
+
 
 <form
         action="/tariffs/import/csv"
