@@ -71,6 +71,7 @@ body {
     background: white;
     border: 1px solid var(--primary);
     color: var(--primary);
+    margin: 0;
 }
 
 .btn-success {
@@ -78,13 +79,14 @@ body {
     color: white;
 }
 
+.btn-danger{
+    background-color: var(--danger);
+    color: white;
+}
+
 .btn:hover {
     opacity: 0.9;
     transform: translateY(-1px);
-}
-
-.btn + .btn {
-    margin-left: 8px;
 }
 
 .table {
@@ -98,7 +100,7 @@ body {
 .table th {
     background: #f8f9fa;
     padding: 15px;
-    text-align: left;
+    text-align: center;
     font-size: 13px;
     text-transform: uppercase;
     color: var(--gray);
@@ -199,6 +201,7 @@ input[type="datetime-local"] {
     align-items: center;
     gap: 10px;
     margin-bottom: 20px;
+    flex-wrap: wrap;
 }
 
 .import-form input[type="file"] {

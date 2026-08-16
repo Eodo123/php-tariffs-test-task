@@ -1,5 +1,5 @@
 <h1>Тарифы</h1>
-<div class="actions">
+<div class="card">
     <a class="btn btn-primary" href="/tariffs/create">
         Создать тариф
     </a>
@@ -85,7 +85,7 @@
                 <td><?= htmlspecialchars((string) $tariff->id) ?></td>
                 <td><?= htmlspecialchars($tariff->name) ?></td>
                 <td><?= htmlspecialchars($tariff->description ?? '') ?></td>
-                <td>
+                <td style="min-width: 210px;">
                     <input
                             type="number"
                             class="speed-input"
@@ -98,10 +98,21 @@
                 <td><?= htmlspecialchars((string) $tariff->price) ?> ₽</td>
                 <td><?= htmlspecialchars($tariff->createdAt) ?></td>
                 <td><?= htmlspecialchars($tariff->expiresAt ?? '') ?></td>
-                <td>
+                <td style="display: flex; align-content: center; justify-content: space-between">
                     <a class="btn btn-outline" href="/tariffs/<?= $tariff->id ?>">
                         Просмотр
                     </a>
+                    <br>
+                    <form
+                            action="/tariffs/<?= $tariff->id ?>/delete"
+                            method="POST"
+                            style="display: inline; padding-left: 5px"
+                            onsubmit="return confirm('Удалить тариф «<?= htmlspecialchars($tariff->name) ?>»?');"
+                    >
+                        <button class="btn btn-danger" type="submit">
+                            Удалить
+                        </button>
+                    </form>
                 </td>
             </tr>
         <?php endforeach; ?>

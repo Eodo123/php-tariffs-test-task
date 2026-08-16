@@ -63,6 +63,11 @@ $router->get(
 );
 
 $router->post(
+    '/tariffs/{id}/delete',
+    [$controller, 'delete']
+);
+
+$router->post(
     '/tariffs/{id}/speed',
     [$controller, 'updateSpeed']
 );

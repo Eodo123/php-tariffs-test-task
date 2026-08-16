@@ -117,6 +117,17 @@ class TariffRepository
         ]);
     }
 
+    public function delete(int $id): void
+    {
+        $statement = $this->connection->prepare(
+            'DELETE FROM tariffs WHERE id = :id'
+        );
+
+        $statement->execute([
+            'id' => $id,
+        ]);
+    }
+
     private function mapRowToTariff(array $row): Tariff
     {
         return new Tariff(

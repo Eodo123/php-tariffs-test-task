@@ -240,6 +240,22 @@ class TariffController
         exit;
     }
 
+    public function delete(int $id): void
+    {
+        $tariff = $this->repository->findById($id);
+
+        if ($tariff === null) {
+            http_response_code(404);
+            echo 'Тариф не найден';
+            return;
+        }
+
+        $this->repository->delete($id);
+
+        header('Location: /');
+        exit;
+    }
+
     public function updateSpeed(int $id): void
     {
         $speed = (int) ($_POST['speed'] ?? 0);
