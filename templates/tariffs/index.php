@@ -1,40 +1,40 @@
 <h1>Тарифы</h1>
+<div class="actions">
+    <a class="btn btn-primary" href="/tariffs/create">
+        Создать тариф
+    </a>
 
-<a href="/tariffs/create">
-    Создать тариф
-</a>
+    <a class="btn btn-outline" href="/tariffs/export/csv">
+        Экспортировать в CSV
+    </a>
 
-<br>
-<br>
-
-<a href="/tariffs/export/csv">
-    Экспортировать в CSV
-</a>
-
-<a href="/tariffs/export/pdf">
-    Экспортировать в PDF
-</a>
-
-<br>
-<br>
+    <a class="btn btn-outline" href="/tariffs/export/pdf">
+        Экспортировать в PDF
+    </a>
+</div>
 
 
-<form
-        action="/tariffs/import/csv"
-        method="POST"
-        enctype="multipart/form-data"
->
-    <input
-            type="file"
-            name="file"
-            accept=".csv"
-            required
+<div class="card">
+    <h2>Импорт тарифов</h2>
+
+    <form
+            class="import-form"
+            action="/tariffs/import/csv"
+            method="POST"
+            enctype="multipart/form-data"
     >
+        <input
+                type="file"
+                name="file"
+                accept=".csv"
+                required
+        >
 
-    <button type="submit">
-        Импортировать CSV
-    </button>
-</form>
+        <button class="btn btn-success" type="submit">
+            Импортировать CSV
+        </button>
+    </form>
+</div>
 
 <?php if (isset($_SESSION['import_result'])): ?>
     <?php $result = $_SESSION['import_result']; ?>
@@ -64,49 +64,50 @@
 
     <?php unset($_SESSION['error']); ?>
 <?php endif; ?>
-
-<table border="1">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Название</th>
-        <th>Описание</th>
-        <th>Скорость</th>
-        <th>Стоимость</th>
-        <th>Дата создания</th>
-        <th>Дата окончания</th>
-        <th>Действия</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    <?php foreach ($tariffs as $tariff): ?>
+<div class="table-wrapper">
+    <table class="table">
+        <thead>
         <tr>
-            <td><?= htmlspecialchars((string) $tariff->id) ?></td>
-            <td><?= htmlspecialchars($tariff->name) ?></td>
-            <td><?= htmlspecialchars($tariff->description ?? '') ?></td>
-            <td>
-                <input
-                        type="number"
-                        class="speed-input"
-                        data-tariff-id="<?= $tariff->id ?>"
-                        value="<?= htmlspecialchars((string) $tariff->speed) ?>"
-                        min="1"
-                >
-                Мбит/с
-            </td>
-            <td><?= htmlspecialchars((string) $tariff->price) ?> ₽</td>
-            <td><?= htmlspecialchars($tariff->createdAt) ?></td>
-            <td><?= htmlspecialchars($tariff->expiresAt ?? '') ?></td>
-            <td>
-                <a href="/tariffs/<?= $tariff->id ?>">
-                    Просмотр
-                </a>
-            </td>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Скорость</th>
+            <th>Стоимость</th>
+            <th>Дата создания</th>
+            <th>Дата окончания</th>
+            <th>Действия</th>
         </tr>
-    <?php endforeach; ?>
-    </tbody>
-</table>
+        </thead>
+
+        <tbody>
+        <?php foreach ($tariffs as $tariff): ?>
+            <tr>
+                <td><?= htmlspecialchars((string) $tariff->id) ?></td>
+                <td><?= htmlspecialchars($tariff->name) ?></td>
+                <td><?= htmlspecialchars($tariff->description ?? '') ?></td>
+                <td>
+                    <input
+                            type="number"
+                            class="speed-input"
+                            data-tariff-id="<?= $tariff->id ?>"
+                            value="<?= htmlspecialchars((string) $tariff->speed) ?>"
+                            min="1"
+                    >
+                    Мбит/с
+                </td>
+                <td><?= htmlspecialchars((string) $tariff->price) ?> ₽</td>
+                <td><?= htmlspecialchars($tariff->createdAt) ?></td>
+                <td><?= htmlspecialchars($tariff->expiresAt ?? '') ?></td>
+                <td>
+                    <a class="btn btn-outline" href="/tariffs/<?= $tariff->id ?>">
+                        Просмотр
+                    </a>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
 <script>
     document.querySelectorAll('.speed-input').forEach(input => {
         input.addEventListener('change', async () => {

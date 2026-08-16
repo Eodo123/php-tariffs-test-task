@@ -1,0 +1,232 @@
+:root {
+    --primary: #4a90e2;
+    --primary-hover: #357abd;
+    --success: #27ae60;
+    --danger: #e74c3c;
+    --gray: #7f8c8d;
+    --dark: #2c3e50;
+    --bg: #f5f7fa;
+    --border: #e1e5e8;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background-color: var(--bg);
+    color: var(--dark);
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    background: white;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--dark);
+}
+
+.main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 30px 40px;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 18px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.2;
+    cursor: pointer;
+    border: none;
+    transition: 0.2s ease;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-outline {
+    background: white;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+}
+
+.btn-success {
+    background: var(--success);
+    color: white;
+}
+
+.btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.btn + .btn {
+    margin-left: 8px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table th {
+    background: #f8f9fa;
+    padding: 15px;
+    text-align: left;
+    font-size: 13px;
+    text-transform: uppercase;
+    color: var(--gray);
+    border-bottom: 2px solid #eee;
+    white-space: nowrap;
+}
+
+.table td {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+.table tbody tr:hover {
+    background: #fafbfc;
+}
+
+.speed-input {
+    width: 65px;
+    padding: 6px 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-align: center;
+    font-family: inherit;
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+.speed-input:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.15);
+}
+
+.main-card{
+    padding: 20px;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+input[type="text"],
+input[type="number"],
+textarea,
+input[type="datetime-local"] {
+    width: 70%;
+    max-width: 600px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+.alert {
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+.alert-success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.alert-error {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.dl {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 10px;
+}
+
+.dt {
+    font-weight: bold;
+    color: var(--gray);
+}
+
+.dd {
+    margin: 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.import-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.import-form input[type="file"] {
+    width: auto;
+    font-family: inherit;
+}
+
+.import-form input[type="file"] {
+    width: auto;
+    font-family: inherit;
+    font-size: 14px;
+}
+
+.import-form input[type="file"]::file-selector-button {
+    padding: 10px 18px;
+    margin-right: 10px;
+    border: 1px solid var(--primary);
+    border-radius: 6px;
+    background: white;
+    color: var(--primary);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.import-form input[type="file"]::file-selector-button:hover {
+    background: var(--primary);
+    color: white;
+}

@@ -1,7 +1,7 @@
 <h1><?= htmlspecialchars($title) ?></h1>
 
 <?php if (!empty($errors)): ?>
-    <div>
+    <div class="alert">
         <strong>Ошибки:</strong>
 
         <ul>
@@ -11,7 +11,7 @@
         </ul>
     </div>
 <?php endif; ?>
-
+<div class="card">
 <form
         method="POST"
         action="<?= $tariff !== null
@@ -19,8 +19,8 @@
                 : '/tariffs' ?>"
 >
 
-    <div>
-        <label for="name">Название:</label>
+    <div class="form-group">
+        <label class="label" for="name">Название:</label>
 
         <input
             type="text"
@@ -33,8 +33,8 @@
 
     <br>
 
-    <div>
-        <label for="description">Описание:</label>
+    <div class="form-group">
+        <label class="label" for="description">Описание:</label>
 
         <textarea
             id="description"
@@ -44,8 +44,8 @@
 
     <br>
 
-    <div>
-        <label for="speed">Скорость:</label>
+    <div class="form-group">
+        <label class="label" for="speed">Скорость:</label>
 
         <input
             type="number"
@@ -61,8 +61,8 @@
 
     <br>
 
-    <div>
-        <label for="price">Стоимость:</label>
+    <div class="form-group">
+        <label class="label" for="price">Стоимость:</label>
 
         <input
             type="number"
@@ -79,8 +79,8 @@
 
     <br>
 
-    <div>
-        <label for="expires_at">Дата окончания:</label>
+    <div class="form-group">
+        <label class="label" for="expires_at">Дата окончания:</label>
 
         <input
             type="datetime-local"
@@ -96,12 +96,12 @@
 
     <br>
 
-    <button type="submit">
+    <button class="btn btn-primary" type="submit">
         Сохранить
     </button>
 
 </form>
-
+</div>
 <br>
 
-<a href="/">← Назад к списку</a>
+<a class="btn btn-outline" href="/">← Назад к списку</a>
