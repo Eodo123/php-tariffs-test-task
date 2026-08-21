@@ -13,3 +13,24 @@
 - импорт тарифов из CSV;
 - проверка данных при импорте CSV;
 - экспорт списка тарифов в PDF.
+
+ ## Локальный запуск
+
+### Требования
+
+- PHP 8.4+
+- Composer
+- SQLite
+
+### Установка
+
+Клонируйте репозиторий:
+
+```bash
+git clone <URL_РЕПОЗИТОРИЯ>
+cd php-tariffs-test-task
+
+composer install
+
+touch database/database.sqlite
+php src/database/migrate.php
